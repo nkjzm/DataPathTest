@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.IO;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 public class Test : MonoBehaviour
 {
