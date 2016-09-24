@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System;
 
 public class Test : MonoBehaviour
 {
@@ -51,11 +52,17 @@ public class Test : MonoBehaviour
         DeleteFile(Application.temporaryCachePath);
         DeleteFile(Application.streamingAssetsPath);
         PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
     }
 
     void DeleteFile(string rootPath)
     {
-        File.Delete(rootPath + "/test");
+        try
+        {
+            Debug.Log("Try to Delete " + rootPath);
+            File.Delete(rootPath + "/test");
+        }
+        catch (Exception e) { Debug.Log(e); }
     }
 
     void CreatePanelByLoad(string label, string path)
@@ -72,21 +79,35 @@ public class Test : MonoBehaviour
 
     void SaveFile(string rootPath)
     {
-        if (!Directory.Exists(rootPath))
+        try
         {
-            Directory.CreateDirectory(rootPath);
+            Debug.Log("Try to Save in " + rootPath);
+            if (!Directory.Exists(rootPath))
+            {
+                Directory.CreateDirectory(rootPath);
+            }
+            string path = rootPath + "/test";
+            File.WriteAllText(path, EXIST, System.Text.Encoding.UTF8);
         }
-        string path = rootPath + "/test";
-        File.WriteAllText(path, EXIST, System.Text.Encoding.UTF8);
+        catch (Exception e) { Debug.Log(e); }
     }
 
     string LoadFile(string rootPath)
     {
-        string path = rootPath + "/test";
-        if (!File.Exists(@path))
+        try
         {
-            return NO_EXIST;
+            Debug.Log("Try to Load from " + rootPath);
+            string path = rootPath + "/test";
+            if (!File.Exists(@path))
+            {
+                return NO_EXIST;
+            }
+            return File.ReadAllText(path, System.Text.Encoding.UTF8);
         }
-        return File.ReadAllText(path, System.Text.Encoding.UTF8);
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            return string.Empty;
+        }
     }
 }
